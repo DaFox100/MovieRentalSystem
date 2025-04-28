@@ -1,4 +1,5 @@
-package SQLMovieProject.src.SQLMovieProject;
+package SQLMovieProject;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -17,8 +18,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 
+
 @WebServlet("/movies")
 public class MoviesServlet extends HttpServlet {
+  public static void main(String[] args)
+  {
+    System.out.println("HeloWorld");
+  }
+ 
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
     PrintWriter out = response.getWriter();
@@ -53,3 +60,5 @@ public class MoviesServlet extends HttpServlet {
     }
   }
 }
+
+

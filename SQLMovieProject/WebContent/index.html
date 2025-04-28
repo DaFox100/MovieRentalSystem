@@ -101,10 +101,11 @@
 
   <!-- Image Section -->
   <div class="image-section">
-    <img src="https://miro.medium.com/v2/resize:fit:1400/1*IozM4X8HDsYqeL7uPcN8pg.jpeg" alt="Retro Theater">
+    <img id="banner-image" src="https://miro.medium.com/v2/resize:fit:1400/1*IozM4X8HDsYqeL7uPcN8pg.jpeg" alt="Retro Theater">
   </div>
-  # Top Ranked Movies
-  <!-- Table -->
+  
+
+  <!-- Top Ranked Movies -->
   <table class="Top-Ranked-Movies">
     <thead>
       <tr>
@@ -118,10 +119,8 @@
     </tbody>
   </table>
 
-  # movie-section
-
   <!-- Movies Section (Initially Hidden) -->
-<div id="movie-section" style="display: none; padding: 40px; display: flex; justify-content: center; gap: 50px;">
+  <div id="movie-section" style="display: none; padding: 40px; display: flex; justify-content: center; gap: 50px;">
     <!-- Movie Table -->
     <table class="Top-Ranked-Movies" style="flex: 1;">
       <thead>
@@ -136,67 +135,145 @@
         <!-- Rows will be populated by JavaScript -->
       </tbody>
     </table>
-  
+
     <!-- Image + Rent Section -->
     <div style="flex: 0.6; text-align: center;">
       <img id="movie-poster" src="https://placehold.co/300x400?text=Select+Movie" alt="Movie Poster" style="width: 100%; border: 4px solid #f0f; box-shadow: 0 0 20px #f0f;">
-      <button style="margin-top: 20px; padding: 10px 30px; font-size: 1.1rem; background: #0ff; border: none; color: #000; cursor: pointer; box-shadow: 0 0 10px #0ff, 0 0 20px #f0f;">Rent</button>
+      <br><br>
+      <button id="rent-button" style="margin-top: 20px; padding: 10px 30px; font-size: 1.1rem; background: #0ff; border: none; color: #000; cursor: pointer; box-shadow: 0 0 10px #0ff, 0 0 20px #f0f;">Rent</button>
     </div>
   </div>
 
+  <!-- Rent Modal -->
+  <div id="rent-modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background-color:#111; padding:30px; border:3px solid #0ff; box-shadow:0 0 20px #0ff, 0 0 40px #f0f; z-index:2000; text-align:center; color:white;">
+    <h2 class="neon">Confirm Your Rental</h2>
+    <p>Please enter your Customer ID:</p>
+    <input id="customer-id" type="text" placeholder="Enter Customer ID" style="padding:10px; font-size:1rem; margin-top:10px; margin-bottom:20px; width:80%;">
+    <br>
+    <button id="confirm-rent" style="padding:10px 30px; font-size:1.1rem; background:#0ff; border:none; color:#000; cursor:pointer; box-shadow:0 0 10px #0ff, 0 0 20px #f0f; margin-right:10px;">Confirm Rental</button>
+    <button id="cancel-rent" style="padding:10px 30px; font-size:1.1rem; background:#f0f; border:none; color:#000; cursor:pointer; box-shadow:0 0 10px #f0f, 0 0 20px #0ff;">Cancel</button>
+  </div>
+
+  <!-- JavaScript Section -->
   <script>
-    const data = [
-      { id: 1, Title: 'SpaceBalls', Rating: '100' },
-      { id: 2, Title: 'The Princess Bride', Rating: '98' },
-      { id: 3, Title: 'Oppenheimer', Rating: '97' }
-    ];
+    // Full unified movies data
+const movies = [
+  {
+    id: 1,
+    title: 'Blade Runner',
+    genre: 'Sci-Fi',
+    rating: 95,
+    poster: 'https://m.media-amazon.com/images/I/71cn8pGHd6L._AC_UF894,1000_QL80_.jpg'
+  },
+  {
+    id: 2,
+    title: 'Back to the Future',
+    genre: 'Adventure',
+    rating: 98,
+    poster: 'https://m.media-amazon.com/images/I/71KgOSSzS1L._AC_UF894,1000_QL80_.jpg'
+  },
+  {
+    id: 3,
+    title: 'Tron',
+    genre: 'Sci-Fi',
+    rating: 102,
+    poster: 'https://cdn.posteritati.com/posters/000/000/057/534/tron-md-web.jpg'
+  },
+  {
+    id: 4,
+    title: 'Apocalypse Now',
+    genre: 'Thriller',
+    rating: 97,
+    poster: 'https://www.posterist.net/cdn/shop/files/apocalypse-now-movie-poster-01.jpg?v=1698399703'
+  },
+  {
+    id: 5,
+    title: 'SpaceBalls',
+    genre: 'Comedy',
+    rating: 105,
+    poster: 'https://miro.medium.com/v2/resize:fit:1400/1*IozM4X8HDsYqeL7uPcN8pg.jpeg'
+  },
+  {
+    id: 6,
+    title: 'The Princess Bride',
+    genre: 'Fantasy',
+    rating: 97,
+    poster: 'https://m.media-amazon.com/images/I/815sfDB8mEL._AC_UF894,1000_QL80_.jpg'
+  },
+  {
+    id: 7,
+    title: 'Oppenheimer',
+    genre: 'Historical Drama',
+    rating: 97,
+    poster: 'https://m.media-amazon.com/images/S/pv-target-images/e5aff20d5190983243fea3582a72bf98808793d88b24fa3fc843eb3544b47734.jpg'
+  }
+];
 
-    const tableBody = document.getElementById('table-body');
+const tableBody = document.getElementById('table-body');
+movies.forEach(movie => {
+  const row = document.createElement('tr');
+  row.innerHTML = `<td>${movie.id}</td><td>${movie.title}</td><td>${movie.rating}</td>`;
+  tableBody.appendChild(row);
+});
+const moviesTable = document.getElementById('movies-table-body');
+const moviePoster = document.getElementById('movie-poster');
 
-    data.forEach(item => {
-      const row = document.createElement('tr');
-      row.innerHTML = `<td>${item.id}</td><td>${item.Title}</td><td>${item.Rating}</td>`;
-      tableBody.appendChild(row);
-    });
+movies.forEach(movie => {
+  const row = document.createElement('tr');
+  const copies = Math.floor(Math.random() * 5) + 1; // Random copies for fun
+  row.innerHTML = `<td>${movie.id}</td><td>${movie.title}</td><td>${movie.genre}</td><td>${copies}</td>`;
+  row.style.cursor = 'pointer';
+  row.addEventListener('click', () => {
+    moviePoster.src = movie.poster;
+  });
+  moviesTable.appendChild(row);
+});
 
-    // Sample movie data
-    const movies = [
-    { id: 1, title: 'Blade Runner', genre: 'Sci-Fi', poster: 'https://m.media-amazon.com/images/I/71cn8pGHd6L._AC_UF894,1000_QL80_.jpg' },
-    { id: 2, title: 'Back to the Future', genre: 'Adventure', poster: 'https://m.media-amazon.com/images/I/71KgOSSzS1L._AC_UF894,1000_QL80_.jpg' },
-    { id: 3, title: 'Tron', genre: 'Sci-Fi', poster: 'https://cdn.posteritati.com/posters/000/000/057/534/tron-md-web.jpg' },
-    {id: 4, title: 'Apocalypse Now', genre: 'Thriller', poster: 'https://www.posterist.net/cdn/shop/files/apocalypse-now-movie-poster-01.jpg?v=1698399703'}
-    ];
+//display the highest rated movie poster
+const bannerImage = document.getElementById('banner-image');
 
-    const moviesTable = document.getElementById('movies-table-body');
-    const movieSection = document.getElementById('movie-section');
-    const moviePoster = document.getElementById('movie-poster');
+let highestRatedMovie = movies[0];
+movies.forEach(movie => {
+  if (movie.rating > highestRatedMovie.rating) {
+    highestRatedMovie = movie;
+  }
+});
+bannerImage.src = highestRatedMovie.poster;
 
-    // Populate movie table
-    movies.forEach(movie => {
-    const row = document.createElement('tr');
-    row.innerHTML = `<td>${movie.id}</td><td>${movie.title}</td><td>${movie.genre}</td><td>${1}</td>`;
-    row.style.cursor = 'pointer';
-
-    // When row is clicked, show poster
-    row.addEventListener('click', () => {
-        moviePoster.src = movie.poster;
-    });
-
-    moviesTable.appendChild(row);
-    });
 
     // Show movie section when clicking "Movies"
     document.querySelector('.menu-bar a:nth-child(2)').addEventListener('click', (e) => {
-    e.preventDefault();
-    movieSection.style.display = 'flex';
-    window.scrollTo({ top: movieSection.offsetTop, behavior: 'smooth' });
+      e.preventDefault();
+      movieSection.style.display = 'flex';
+      window.scrollTo({ top: movieSection.offsetTop, behavior: 'smooth' });
     });
 
-  </script>
+    // Rent Button Logic
+    const rentButton = document.getElementById('rent-button');
+    const rentModal = document.getElementById('rent-modal');
+    const confirmRentButton = document.getElementById('confirm-rent');
+    const cancelRentButton = document.getElementById('cancel-rent');
 
-  
-  
-  
+    rentButton.addEventListener('click', () => {
+      rentModal.style.display = 'block';
+    });
+
+    confirmRentButton.addEventListener('click', () => {
+      const customerId = document.getElementById('customer-id').value;
+      if (customerId.trim() === '') {
+        alert('Please enter a valid Customer ID!');
+      } else {
+        alert(`Rental confirmed for Customer ID: ${customerId}`);
+        rentModal.style.display = 'none';
+        document.getElementById('customer-id').value = '';
+      }
+    });
+
+    cancelRentButton.addEventListener('click', () => {
+      rentModal.style.display = 'none';
+      document.getElementById('customer-id').value = '';
+    });
+  </script>
 
 </body>
 </html>
